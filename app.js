@@ -4,8 +4,22 @@ const morgan = require('morgan'); //Importing the package
 
 const songRoutes = require('./routes/songss'); //CRUD for musicboxdb
 
-app.use('/songs', songRoutes);
 app.use(morgan('dev')); //Using the package, dev is the format.
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+    res.header('Access-Contol-Allow-Origin', '*');
+	res.header('Access-Contol-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    if(req.method === 'OPTIONS'){
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+        return res.status(200).json({});
+    }
+    next();
+});
+
+app.use('/songs', songRoutes);
 
 //Here we handle the errors for the requests.
 app.use((req, res, next) => {
