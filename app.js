@@ -1,12 +1,17 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan'); //Importing the package
-
-const songRoutes = require('./routes/songss'); //CRUD for musicboxdb
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const songRoutes = require('./routes/songs'); //CRUD for musicboxdb
 
 app.use(morgan('dev')); //Using the package, dev is the format.
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+// Connect to the Mongo DB
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/musicboxdb");
+mongoose.connect('mongodb://localhost:27017/blogdb', {useNewUrlParser: true});
 
 app.use((req, res, next) => {
     res.header('Access-Contol-Allow-Origin', '*');
